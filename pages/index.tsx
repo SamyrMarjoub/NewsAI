@@ -104,7 +104,7 @@ export default function Home() {
           </Flex>
         </Box>
 
-        <Box w={'90%'} mt='50px'>
+        <Box w={'90%'} mt='30px'>
 
           <Grid templateColumns='repeat(2, 1fr)' gap={6}>
             {data.map((data) => {

@@ -1,13 +1,65 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '@/component/Header'
 import Footer from '@/component/Footer'
-import { Box, Text } from '@chakra-ui/react'
+import { Box, Text, Button } from '@chakra-ui/react'
 import { data } from '../api/data'
 import { Image } from '@chakra-ui/react'
+import axios from 'axios'
 export default function News(postid: { postId: string }) {
 
     const noticia = data.filter(e => e.id === postid.postId)
-   
+    const [texto, setText] = useState("")
+    async function add() {
+        const res = await axios.get("/api/hello")
+        // console.log(res.data.text)
+        setText(res.data.text)
+    }
+
+    function comeco() {
+        var aText = new Array(
+            texto
+            // "Those who understand binary, and those who don't"
+        );
+        var iSpeed = 30; // time delay of print out
+        var iIndex = 0; // start printing array at this posision
+        var iArrLength = aText[0].length; // the length of the text array
+        var iScrollAt = 20; // start scrolling up at this many lines
+        // const span = document.createElement("span")
+        // span.classList.add("cursor")
+
+        var iTextPos = 0; // initialise text position
+        var sContents = ''; // initialise contents variable
+        var iRow; // initialise current row
+
+        function typewriter() {
+            sContents = ' ';
+            iRow = Math.max(0, iIndex - iScrollAt);
+            var destination = document.getElementById("typedtext");
+            // destination?.append(span)
+            while (iRow < iIndex) {
+                sContents += aText[iRow++] + '<br />';
+            }
+            destination.innerHTML = sContents + aText[iIndex].substring(0, iTextPos);
+            if (iTextPos++ == iArrLength) {
+                iTextPos = 0;
+                iIndex++;
+                if (iIndex != aText.length) {
+                    iArrLength = aText[iIndex].length;
+                    setTimeout(typewriter, 500);
+                }
+            } else {
+                setTimeout(typewriter, iSpeed);
+            }
+        }
+
+
+        typewriter();
+    }
+
+    useEffect(() => {
+        if(texto !== "")comeco()
+    
+    }, [texto])
 
     return (
         <>
@@ -15,16 +67,16 @@ export default function News(postid: { postId: string }) {
             <Box margin={'auto'} height='auto' width={'90%'}>
                 <Text mt={'50px'} as={'h1'} fontSize={'40px'}>{noticia[0].title}</Text>
                 <Text color={'whiteAlpha.700'}>{noticia[0].data} ás {noticia[0].hour}</Text>
+                <Button onClick={add}>Add</Button>
                 <Image mt={'30px'} objectFit={"cover"} src={noticia[0].img1} width='100%' h={'400px'} />
-                <Box maxWidth={'100%'}  className='chatgpt-container' mt='30px' >
-                    <Text  className="typewriter">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                        when an unknown printer <strong>took a galley of type and scrambled it to make a type specimen book</strong>.
-                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum..</Text>
+                <Box height={'auto'} mt='30px' >
+                   
+                    <div>
+                        <p style={{ display: 'inline' }} id="typedtext"></p>
+                        <span className='cursor'></span>
+                    </div>
                 </Box>
-                <Box mt={'30px'}>
+                {/* <Box mt={'30px'}>
                     <Text>Contrary to popular belief, Lorem Ipsum is not simply random text.
                         It has roots in a piece of classical Latin literature from 45 BC,
                         making it over 2000 years old. Richard McClintock, a Latin professor
@@ -60,7 +112,7 @@ export default function News(postid: { postId: string }) {
                         nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea
                         voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.
                     </Text>
-                </Box>
+                </Box> */}
             </Box>
             <Footer />
 
